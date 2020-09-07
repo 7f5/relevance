@@ -58,12 +58,12 @@ public class EventFrequencyBasedBackgroundModel extends SimpleBackgroundModel {
 					n_a_E.put(eventLabel.getKey(), n_a_E.getOrDefault(eventLabel.getKey(), 0) + eventLabel.getValue());
 	}
 
-	protected double logHatLength(Map<String, Integer> logHat) {
-		return logHat.values().stream().mapToDouble(i -> i).sum() + lengthOfE;
+	protected int logHatLength(Map<String, Integer> logHat) {
+		return logHat.values().stream().mapToInt(i -> i).sum() + lengthOfE;
 	}
 
 	protected double p(String element, Map<String, Integer> logHat) {
-		return logHat.get(element) / logHatLength(logHat);
+		return logHat.get(element) / (double) logHatLength(logHat);
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class EventFrequencyBasedBackgroundModel extends SimpleBackgroundModel {
 		for (Entry<String, Integer> eventFrequency : n_a_t.get(traceId).entrySet())
 			bits -= log2(p(eventFrequency.getKey(), n_a_E)) * eventFrequency.getValue();
 		
-		bits -= log2(lengthOfE / logHatLength(n_a_E));
+		bits -= log2(lengthOfE / (double) logHatLength(n_a_E));
 		return bits;
 	}
 
